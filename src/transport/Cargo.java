@@ -17,6 +17,4 @@ public class Cargo {
 		return "Cargo [label=" + label + ", state=" + state + ", weight=" + weight + "]";
 	}
 	
-	
-
 }
