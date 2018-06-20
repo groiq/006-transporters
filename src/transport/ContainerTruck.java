@@ -9,10 +9,6 @@ public class ContainerTruck extends Transporter {
 		
 	}
 
-	@Override
-	public String toString() {
-		return this.getId() + ", currently in " + this.getLocation() + "," + this.capacityString();
-	}
 
 
 

@@ -61,28 +61,38 @@ abstract class Transporter {
 		return maxWeight;
 	}
 
-
-
 	double getCostPerKm() {
 		return costPerKm;
 	}
+	
 	CargoType getCargoType() {
 		return solid;
 	}
 	
-	String capacityString() {
-		double cargoWeight;
-		if (this.cargo != null) {
-			cargoWeight = this.cargo.getWeight();
-		} else {
-			cargoWeight = 0;
-		}
-		return " has " + (this.getMaxWeight() - cargoWeight) + " weight units left.";
+	String toStringStart() {
+		return this.id + ": " + this.getCostPerKm() + " E/km, ";
 	}
 	
+	String toStringEnd() {
+		return "max. " + this.getMaxWeight() + " kg, in " + this.getLocation().getName() + ", cargo: " + this.shortCargo() + ".";
+	}
+	
+	
+	
+		private String shortCargo() {
+		// TODO Auto-generated method stub
+		if (this.getCargo() == null) {
+			return "nothing";
+		} else {
+			return this.getCargo().getWeight() + " kg of " + this.getCargo().getLabel();
+		}
+	}
+
+
+
 		@Override
 	public String toString() {
-		return this.getId() + this.capacityString();
+		return this.toStringStart() + this.toStringEnd();
 	}
 
 

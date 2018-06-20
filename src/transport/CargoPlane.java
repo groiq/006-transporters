@@ -18,5 +18,11 @@ public class CargoPlane extends Transporter {
 		// TODO Auto-generated method stub
 		return super.goTo(destination) + this.getAirportCost();
 	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toStringStart() + "airport cost: " + this.getAirportCost() + ", " + super.toStringEnd();
+	}
 	
 }
