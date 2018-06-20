@@ -10,8 +10,17 @@ public class ContainerTruck extends Transporter {
 	}
 
 	@Override
+	public String toString() {
+		return this.getId() + ", currently in " + this.getLocation() + "," + this.capacityString();
+	}
+
+
+
+	@Override
 	double goTo(Location destination) {
-		if (Country.landConnected(this.getLocation().getCountry(), destination.getCountry())) {
+		// use proper method from location
+		if (this.getLocation().reachableOverland(destination)) {
+//		if (Country.landConnected(this.getLocation().getCountry(), destination.getCountry())) {
 			return super.goTo(destination);
 		} else {
 			Out.println("Error: cannot go overseas");

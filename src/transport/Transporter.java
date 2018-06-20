@@ -70,10 +70,19 @@ abstract class Transporter {
 		return solid;
 	}
 	
+	String capacityString() {
+		double cargoWeight;
+		if (this.cargo != null) {
+			cargoWeight = this.cargo.getWeight();
+		} else {
+			cargoWeight = 0;
+		}
+		return " has " + (this.getMaxWeight() - cargoWeight) + " weight units left.";
+	}
+	
 		@Override
 	public String toString() {
-		return "Transporter [id=" + id + ", maxWeight=" + maxWeight + ", costPerKm=" + costPerKm + ", cargoType="
-				+ this.getCargoType() + ", location=" + location + ", cargo=" + cargo + "]";
+		return this.getId() + this.capacityString();
 	}
 
 
@@ -92,7 +101,7 @@ abstract class Transporter {
 			// calculate weights?
 			this.cargo = cargo;
 		} else {
-			Out.println("Error: wrong cargo type:" + cargo.label + " on " + this.id);
+			Out.println("Error: wrong cargo type: " + cargo.label + " on " + this.id);
 		}
 	}
 	
