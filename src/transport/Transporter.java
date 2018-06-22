@@ -25,37 +25,25 @@ abstract class Transporter {
 		
 	}
 	
-	
-	
 	Location getLocation() {
 		return location;
 	}
-
-
 
 	void setLocation(Location location) {
 		this.location = location;
 	}
 
-
-
 	Cargo getCargo() {
 		return cargo;
 	}
-
-
 
 	void setCargo(Cargo cargo) {
 		this.cargo = cargo;
 	}
 
-
-
 	String getId() {
 		return id;
 	}
-
-
 
 	double getMaxWeight() {
 		return maxWeight;
@@ -77,10 +65,7 @@ abstract class Transporter {
 		return "max. " + this.getMaxWeight() + " kg, in " + this.getLocation().getName() + ", cargo: " + this.shortCargo() + ".";
 	}
 	
-	
-	
 		private String shortCargo() {
-		// TODO Auto-generated method stub
 		if (this.getCargo() == null) {
 			return "nothing";
 		} else {
@@ -105,6 +90,9 @@ abstract class Transporter {
 	}
 	
 	void load(Cargo cargo) {
+		if (this.getCargo() != null) {
+			throw new IllegalStateException("Error: " + this.getId() + " is already carrying cargo.");
+		}
 		if (cargo.cargoType == this.getCargoType()) {
 			// replace with proper exception handling down the line
 			// Also: raise an error if transporter is already carrying cargo
