@@ -92,20 +92,23 @@ abstract class Transporter {
 	void load(Cargo cargo) {
 		if (this.getCargo() != null) {
 			throw new IllegalStateException("Error: " + this.getId() + " is already carrying cargo.");
-		}
-		if (cargo.cargoType == this.getCargoType()) {
-			// replace with proper exception handling down the line
-			// Also: raise an error if transporter is already carrying cargo
-			// calculate weights?
-			this.cargo = cargo;
+		} else if (cargo.getCargoType() != this.getCargoType()) {
+			throw new IllegalArgumentException("Error: " + this.getId() + " is made for " + this.getCargoType() + " goods, but "
+					+ cargo.getLabel() + " is " + cargo.getCargoType() + ".");
+		} else if (cargo.getWeight() > this.getMaxWeight()) {
+			throw new IllegalArgumentException("Error: " + cargo.getWeight() + " exceeds the maximum payload for " + this.getId() + ".");
 		} else {
-			Out.println("Error: wrong cargo type: " + cargo.label + " on " + this.id);
+			this.setCargo(cargo);
 		}
 	}
 	
 	Cargo unload() {
 		Cargo result = this.cargo;
-		this.cargo = null;
+		if (result != null) {
+			this.cargo = null;
+		} else {
+			throw new NullPointerException("Error: " + this.getId() + " isn't carrying anything.");
+		}
 		return result;
 	}
 	
