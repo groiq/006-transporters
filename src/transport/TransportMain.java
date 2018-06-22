@@ -3,108 +3,117 @@ package transport;
 import static transport.CargoType.*;
 import static transport.Country.*;
 
+import java.util.EnumMap;
+
 import inout.Out;
 
 public class TransportMain {
 	
-	public static void printGeneric(Transporter trans) {
-		Out.println(trans.id);
-		Out.println(trans.getMaxWeight());
-	}
+	static Location linz = new Location("Linz", 0, 0, Austria);
+	static Location paris = new Location("Paris", 300, 400, France);
+	static Location ny = new Location("NY", 8000, 0, USA);
+	
+	static Cargo solidNormal = new Cargo("ordinary solid cargo", solid, 10);
+	static Cargo solidExcess = new Cargo("excess solid cargo", solid, 10);
+	static Cargo solidHeavy = new Cargo("overweight solid cargo", solid, 1000);
+	static Cargo liquidNormal = new Cargo("ordinary liquid cargo", liquid, 10);
+	static Cargo liquidExcess = new Cargo("excess liquid cargo", liquid, 10);
+	static Cargo liquidHeavy = new Cargo("overweight liquid cargo", liquid, 1000);
 
-	public static void main(String[] args) {
-		Location linz = new Location("Linz", 0, 0, Austria);
-		Location paris = new Location("Paris", 300, 400, France);
-		Location ny = new Location("NY", 8000, 0, USA);
-		
-		Cargo teddybear = new Cargo("Teddybear", solid, 30);
-		Cargo eggs = new Cargo("Those eggs that never fit in", solid, 30);
-		Cargo booze = new Cargo("Booze", liquid, 40);
-		Cargo feather = new Cargo("Feather", solid, 5000);
-		Cargo wine = new Cargo("Leichter Tischwein", liquid, 6000);
+	static Cargo[] solidCargos = { solidNormal, solidExcess, solidHeavy, liquidNormal };
+	static Cargo[] liquidCargos = { liquidNormal, liquidExcess, liquidHeavy, solidNormal };
 
-		int totalCost = 0;
-		Cargo lastUnload;
-		
-		ContainerTruck wallE = new ContainerTruck("Wall.E", 100, 3, linz);
+	static ContainerTruck wallE = new ContainerTruck("Wall.E", 100, 100, linz);
+	static TankTruck rumRunner = new TankTruck("RumRunner", 100, 100, linz);
+	static CargoPlane fireFlash = new CargoPlane("Fireflash", 100, 100, 100, linz);
+
+	static int totalCost = 0;
+	static Cargo lastUnload;
+	
+	
+	public static void testAll(Transporter trans) {
+		Out.println("## Testing transporter: " + trans.toString());
+		Cargo[] cargos;
+		if (trans.getCargoType() == solid) {
+			cargos = solidCargos;
+		} else {
+			cargos = liquidCargos;
+		}
+		Out.println("# Loading with ordinary cargo... ");
 		try {
-			wallE.load(teddybear);
-			Out.println("Transporter loaded with cargo:" + wallE);
+			trans.load(cargos[0]);
+			Out.println("OK: " + trans.toString());
 		} catch (Exception e) {
 			Out.println("Unexpected exception: " + e.toString());
 		}
+		Out.println("# Loading while already loaded... ");
 		try {
-			wallE.load(eggs);
+			trans.load(cargos[1]);
 			Out.println("Error: Expected exception has not been thrown.");
 		} catch (Exception e) {
-			Out.println("Expected: Already carrying cargo. Received: " + e.toString());
+			Out.println("Expected: Transporter already loaded. Thrown: " + e.toString());
 		}
+		Out.println("# Unloading...");
 		try {
-			lastUnload = wallE.unload();
-			Out.println("Transporter unloaded.");
+			lastUnload = trans.unload();
+			Out.println("OK: " + trans.toString() + "; unloaded: " + lastUnload);
 		} catch (Exception e) {
 			Out.println("Unexpected exception: " + e.toString());
 		}
+		Out.println("# Unloading while unloaded...");
 		try {
-			lastUnload = wallE.unload();
-			Out.println("Error: expected 'already unloaded' exception.");
+			lastUnload = trans.unload();
+			Out.println("Error: expected exception not thrown.");
 		} catch (Exception e) {
-			Out.println("Expected: already unloaded. Thrown: " + e.toString());
+			Out.println("Expected: unloading while unloaded. Thrown: " + e.toString());
 		}
+		Out.println("# Loading overweight cargo...");
 		try {
-			wallE.load(booze);
-			Out.println("Error: Expected exception: wrong cargo type.");
+			trans.load(cargos[2]);
+			Out.println("Error: Expected exception not thrown.");
 		} catch (Exception e) {
-			Out.println("Expected: wrong cargo type. Thrown: " + e.toString());
+			Out.println("Expected: overweight cargo. Thrown: " + e.toString());
 		}
+		Out.println("# Loading wrong cargo type...");
 		try {
-			wallE.load(feather);
-			Out.println("Error: Expected exception: overweight.");
+			trans.load(cargos[3]);
+			Out.println("Error: Expected exception not thrown.");
 		} catch (Exception e) {
-			Out.println("Expected: overweight. Thrown: " + e.toString());
+			Out.println("Expected: Wrong cargo type. Thrown: " + e.toString());
 		}
+		Out.println("# Travelling over land...");
 		try {
-			totalCost += wallE.goTo(paris);
-			Out.println(wallE.getId() + " traveled to " + wallE.getLocation() + ". Total cost now" + totalCost + ".");
+			totalCost += trans.goTo(paris);
+			Out.println("OK: " + trans.toString() + "; total cost: " + totalCost);
 		} catch (Exception e) {
 			Out.println("Error: unexpected exception: " + e.toString());
 		}
+		Out.println("# Travelling overseas...");
+		if (trans instanceof transport.CargoPlane) {
+			try {
+				totalCost += trans.goTo(ny);
+				Out.println("OK: " + trans.toString() + "; total cost: " + totalCost);
+			} catch (Exception e) {
+				Out.println("Error: unexpected exception: " + e.toString());
+			}
+		} else {
+			try {
+				totalCost += trans.goTo(ny);
+				Out.println("Error: Expected exception not thrown.");
+			} catch (Exception e) {
+				Out.println("Expected: truck cannot travel overseas. Thrown: " + e.toString());
+			}
+		}
 		
-		
-		
-//		wallE.load(booze);
-//		wallE.unload();
-//		wallE.load(booze);
-//		wallE.load(feather);
-//		totalCost += wallE.goTo(paris);
-//		totalCost += wallE.goTo(ny);
-//		Out.println(wallE);
-//		Out.println(totalCost);
-//		lastUnload = wallE.unload();
-//		Out.println(lastUnload);
-//		Out.println();
+		Out.println();
+	}
 
-		TankTruck rumRunner = new TankTruck("RumRunner", 100, 200, linz);
-//		rumRunner.load(booze);
-//		rumRunner.load(teddybear);
-//		totalCost += rumRunner.goTo(paris);
-//		totalCost += rumRunner.goTo(ny);
-//		Out.println(rumRunner);
-//		Out.println(totalCost);
-//		lastUnload = rumRunner.unload();
-//		Out.println(lastUnload);
-//		Out.println();
-//
-//		CargoPlane fireflash = new CargoPlane("Fireflash", 100, 100, 100, linz);
-//		fireflash.load(booze);
-//		fireflash.load(teddybear);
-//		totalCost += fireflash.goTo(paris);
-//		totalCost += fireflash.goTo(ny);
-//		Out.println(fireflash);
-//		Out.println(totalCost);
-//		lastUnload = fireflash.unload();
-//		Out.println(lastUnload);
-//		Out.println();
+	public static void main(String[] args) {
+		
+		testAll(wallE);
+		testAll(rumRunner);
+		testAll(fireFlash);
+
 		
 		
 
