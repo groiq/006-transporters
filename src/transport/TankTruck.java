@@ -2,24 +2,19 @@ package transport;
 
 import static transport.CargoType.*;
 
-
 public class TankTruck extends ContainerTruck {
 	
-//	final CargoType cargoType = liquid;
-
+	/*
+	 * A subclass of ContainerTruck for transporting liquid cargo.
+	 * Overrides the getCargoType() method.
+	 */
+	
 	public TankTruck(String id, double maxWeight, double costPerKm, Location firstLocation) {
 		super(id, maxWeight, costPerKm, firstLocation);
-//		this.cargoType = liquid;
-		
 	}
 
 	@Override
 	CargoType getCargoType() {
 		return liquid;
 	}
-	
-	
-	
-	
-
 }

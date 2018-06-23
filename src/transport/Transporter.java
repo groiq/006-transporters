@@ -2,18 +2,24 @@ package transport;
 
 import static transport.CargoType.*;
 
-
+/**
+ * 
+ * @author HAL
+ *
+ * Represents a cargo vehicle.
+ */
 abstract class Transporter {
 	
-	public final String id;
-	public final double maxWeight;
-	public final double costPerKm;
+	/*
+	 * Fields, constructor, getters, setters
+	 */
 	
-	// default to solid goods; Tank truck will override this
-//	public final CargoType cargoType = solid;
+	private final String id;
+	private final double maxWeight;
+	private final double costPerKm;
 	
-	public Location location;
-	public Cargo cargo;
+	private Location location;
+	private Cargo cargo;
 	
 	public Transporter(String id, double maxWeight, double costPerKm, Location firstLocation) {
 		this.id = id;
@@ -21,7 +27,6 @@ abstract class Transporter {
 		this.costPerKm = costPerKm;
 		this.cargo = null;
 		this.location = firstLocation;
-		
 	}
 	
 	Location getLocation() {
@@ -52,9 +57,18 @@ abstract class Transporter {
 		return costPerKm;
 	}
 	
+	// A transporter can only load solid or liquid cargo. The type of cargo is designated by a fake getter.
+	// The transporter class defaults to solid cargo, this will be overwritten for TankTruck.
 	CargoType getCargoType() {
 		return solid;
 	}
+	
+	/* 
+	 * toString()
+	 */
+	
+	// toString() gives the most important stats. It's assembled from some helper methods to make output more flexible.
+	// (Specifically, for CargoPlane the airport cost is spliced in in the middle.)
 	
 	String toStringStart() {
 		return this.id + ": " + this.getCostPerKm() + " E/km, ";
@@ -76,14 +90,25 @@ abstract class Transporter {
 	public String toString() {
 		return this.toStringStart() + this.toStringEnd();
 	}
+		
+	/*
+	 * go to a different location, return travel costs.
+	 */
 
 	double goTo(Location destination) {
-		double result = location.getDistance(destination);
+		double result = this.getLocation().getDistance(destination);
 		result = result * costPerKm;
-		location = destination;
+		this.setLocation(destination);
 		return result;
 	}
 	
+	/*
+	 * Load and unload vehicle 
+	 */
+	
+	// Load vehicle with cargo. 
+	// First checks whether the vehicle isn't already carrying anything; then whether the cargo is of the right type;
+	// finally whether the cargo exceeds max weight.
 	void load(Cargo cargo) {
 		if (this.getCargo() != null) {
 			throw new IllegalStateException("Error: " + this.getId() + " is already carrying cargo.");
@@ -97,6 +122,7 @@ abstract class Transporter {
 		}
 	}
 	
+	// Unload the vehicle. Returns the cargo. Checks whether vehicle is actually carrying something.
 	Cargo unload() {
 		Cargo result = this.cargo;
 		if (result != null) {
@@ -106,5 +132,4 @@ abstract class Transporter {
 		}
 		return result;
 	}
-
 }
