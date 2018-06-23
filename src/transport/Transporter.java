@@ -73,14 +73,10 @@ abstract class Transporter {
 		}
 	}
 
-
-
 		@Override
 	public String toString() {
 		return this.toStringStart() + this.toStringEnd();
 	}
-
-
 
 	double goTo(Location destination) {
 		double result = location.getDistance(destination);
@@ -111,6 +107,5 @@ abstract class Transporter {
 		}
 		return result;
 	}
-	
 
 }

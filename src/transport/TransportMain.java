@@ -44,49 +44,49 @@ public class TransportMain {
 			trans.load(cargos[0]);
 			Out.println("OK: " + trans.toString());
 		} catch (Exception e) {
-			Out.println("Unexpected exception: " + e.toString());
+			Out.println("ERROR: Unexpected exception: " + e.toString());
 		}
 		Out.println("# Loading while already loaded... ");
 		try {
 			trans.load(cargos[1]);
-			Out.println("Error: Expected exception has not been thrown.");
+			Out.println("ERROR: Expected exception has not been thrown.");
 		} catch (Exception e) {
-			Out.println("Expected: Transporter already loaded. Thrown: " + e.toString());
+			Out.println("OK: Expected: Transporter already loaded. Thrown: " + e.toString());
 		}
 		Out.println("# Unloading...");
 		try {
 			lastUnload = trans.unload();
 			Out.println("OK: " + trans.toString() + "; unloaded: " + lastUnload);
 		} catch (Exception e) {
-			Out.println("Unexpected exception: " + e.toString());
+			Out.println("ERROR: Unexpected exception: " + e.toString());
 		}
 		Out.println("# Unloading while unloaded...");
 		try {
 			lastUnload = trans.unload();
-			Out.println("Error: expected exception not thrown.");
+			Out.println("ERROR: expected exception not thrown.");
 		} catch (Exception e) {
-			Out.println("Expected: unloading while unloaded. Thrown: " + e.toString());
+			Out.println("OK: Expected: unloading while unloaded. Thrown: " + e.toString());
 		}
 		Out.println("# Loading overweight cargo...");
 		try {
 			trans.load(cargos[2]);
-			Out.println("Error: Expected exception not thrown.");
+			Out.println("ERROR: Expected exception not thrown.");
 		} catch (Exception e) {
-			Out.println("Expected: overweight cargo. Thrown: " + e.toString());
+			Out.println("OK: Expected: overweight cargo. Thrown: " + e.toString());
 		}
 		Out.println("# Loading wrong cargo type...");
 		try {
 			trans.load(cargos[3]);
-			Out.println("Error: Expected exception not thrown.");
+			Out.println("ERROR: Expected exception not thrown.");
 		} catch (Exception e) {
-			Out.println("Expected: Wrong cargo type. Thrown: " + e.toString());
+			Out.println("OK: Expected: Wrong cargo type. Thrown: " + e.toString());
 		}
 		Out.println("# Travelling over land...");
 		try {
 			totalCost += trans.goTo(paris);
 			Out.println("OK: " + trans.toString() + "; total cost: " + totalCost);
 		} catch (Exception e) {
-			Out.println("Error: unexpected exception: " + e.toString());
+			Out.println("ERROR: unexpected exception: " + e.toString());
 		}
 		Out.println("# Travelling overseas...");
 		if (trans instanceof transport.CargoPlane) {
@@ -94,14 +94,14 @@ public class TransportMain {
 				totalCost += trans.goTo(ny);
 				Out.println("OK: " + trans.toString() + "; total cost: " + totalCost);
 			} catch (Exception e) {
-				Out.println("Error: unexpected exception: " + e.toString());
+				Out.println("ERROR: unexpected exception: " + e.toString());
 			}
 		} else {
 			try {
 				totalCost += trans.goTo(ny);
-				Out.println("Error: Expected exception not thrown.");
+				Out.println("ERROR: Expected exception not thrown.");
 			} catch (Exception e) {
-				Out.println("Expected: truck cannot travel overseas. Thrown: " + e.toString());
+				Out.println("OK: Expected: truck cannot travel overseas. Thrown: " + e.toString());
 			}
 		}
 		
@@ -113,9 +113,6 @@ public class TransportMain {
 		testAll(wallE);
 		testAll(rumRunner);
 		testAll(fireFlash);
-
-		
-		
 
 	}
 
