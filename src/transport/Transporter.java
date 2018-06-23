@@ -2,7 +2,6 @@ package transport;
 
 import static transport.CargoType.*;
 
-import inout.Out;
 
 abstract class Transporter {
 	
